@@ -3,9 +3,11 @@ package com.prafullkumar.posedetector.staticImage.ui
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.mlkit.vision.pose.PoseLandmark
 import com.prafullkumar.posedetector.Response
 import com.prafullkumar.posedetector.staticImage.domain.models.PoseDetails
 import com.prafullkumar.posedetector.staticImage.domain.repositories.PoseRepository
@@ -50,6 +52,11 @@ class StaticVM @Inject constructor(
         } else {
             null
         }
+    }
+    fun convertPoseDetailsToListOfPoseLandmarks(poseDetails: PoseDetails): List<PoseLandmark> {
+        val poseLandmarks = mutableListOf<PoseLandmark>()
+
+        return poseLandmarks
     }
 }
 sealed class StaticUiState {
