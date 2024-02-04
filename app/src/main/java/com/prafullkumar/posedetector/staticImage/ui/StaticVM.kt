@@ -1,20 +1,17 @@
 package com.prafullkumar.posedetector.staticImage.ui
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.util.Log
-import androidx.core.content.ContextCompat
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.mlkit.vision.pose.PoseLandmark
 import com.prafullkumar.posedetector.Response
 import com.prafullkumar.posedetector.staticImage.domain.models.PoseDetails
 import com.prafullkumar.posedetector.staticImage.domain.repositories.PoseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,9 +21,9 @@ class StaticVM @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<StaticUiState>(StaticUiState.Initial)
     val uiState = _uiState.asStateFlow()
-
-
+    var image by mutableStateOf<Bitmap?>(null)
     fun getPoses(bitmap: Bitmap?) {
+        image = bitmap
         viewModelScope.launch {
             if (bitmap != null) {
                 poseRepository.getPoses(bitmap).collect { resp ->
@@ -45,20 +42,9 @@ class StaticVM @Inject constructor(
             }
         }
     }
-    fun getBitmapFromDrawable(context: Context, drawableId: Int): Bitmap? {
-        val drawable = ContextCompat.getDrawable(context, drawableId)
-        return if (drawable is BitmapDrawable) {
-            drawable.bitmap
-        } else {
-            null
-        }
-    }
-    fun convertPoseDetailsToListOfPoseLandmarks(poseDetails: PoseDetails): List<PoseLandmark> {
-        val poseLandmarks = mutableListOf<PoseLandmark>()
-
-        return poseLandmarks
-    }
 }
+
+
 sealed class StaticUiState {
     data object Initial : StaticUiState()
     data object Loading : StaticUiState()
